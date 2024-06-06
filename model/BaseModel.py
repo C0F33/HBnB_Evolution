@@ -11,9 +11,8 @@ class BaseModel:
         """time and date of innitialization"""
         self.updated_at = datetime.now()
         """time and date of last update"""
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     def save(self):
         self.updated_at = datetime.now()
-
-    def to_dict(self):
-        return self.__dict__.copy()

@@ -1,10 +1,11 @@
 import uuid
+from model import BaseModel
 """place class, inherited by derived classes"""
 
 
-class Places:
+class Places(BaseModel):
     def __init__(self, name, price, description):
-        self.id = str(uuid.uuid4())
         self.name = name
         self.price = price
         self.description = description
+        self.reviews = []  # List of reviews for the place

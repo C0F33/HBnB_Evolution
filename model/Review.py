@@ -1,8 +1,10 @@
-import uuuid
+import uuid
 
-cls Review:
+from model import BaseModel
+
+
+class Review(BaseModel):
     def __init__(self, place_id, user_id, text, score):
-        self.id = str(uuid.uuid4())
         self.place_id = place_id
         self.user_id = user_id
         self.text = text
