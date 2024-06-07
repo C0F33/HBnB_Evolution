@@ -1,8 +1,21 @@
 import unittest
-from model import User
+import sys
+import os
 
+# Get the directory that contains the current script.
+current_directory = os.path.dirname(os.path.abspath(__file__))
+
+# Get the parent directory.
+parent_directory = os.path.dirname(current_directory)
+
+# Add the parent directory to the Python path.
+sys.path.append(parent_directory)
+
+# Now you can import the User class.
+from User import User
 
 class TestUser(unittest.TestCase):
+
     def setUp(self):
         """This method is called before each test"""
         User._users = []  # Reset the list of users
