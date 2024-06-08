@@ -1,21 +1,51 @@
 #!/usr/bin/python3
 """
-API for HBnB Evolution
+Hbnb API Flask application.
 """
+from api.v1.views import app_views
+from flasgger import Swagger
+from flask import Flask, make_response, jsonify
+from flask_cors import CORS
+from models import storage_engine
+from os import environ
 
-from flask import Flask, jsonify
-from models.base_model import BaseModel
 
-app = Flask(__name__)
+app = Flask('Hbnb REST API')
+
+# TODO: update to app.json.compact
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+
+app.register_blueprint(app_views)
+
+cors = CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 
-@app.route('/api/v1/status', methods=['GET'])
-def status():
+@app.teardown_appcontext
+def close_db(error):
     """
-    Return the status of the API
+    Closes the storage engine.
     """
-    return jsonify({"status": "OK"})
+    storage_engine.close()
+
+@app.errorhandler(404)
+def not_found(error):
+    """
+    Returns the 404 error response.
+    """
+    return make_response(jsonify({'error': "Not found"}), 404)
+
+app.config['SWAGGER'] = {
+    'title': 'Hbnb REST API',
+    'uiversion': 3
+}
+
+Swagger(app)
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(
+        host=environ.get('HBNB_API_HOST', '0.0.0.0'),
+        port=environ.get('HBNB_API_PORT', '5002'),
+        debug=True,
+        threaded=True
+    )
