@@ -1,34 +1,25 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 """
-Module for Amenity class
+Defines the `Amenity` model.
 """
+from models import DeclarativeBase, STORAGE_TYPE
+from models.base_model import BaseModel
+from sqlalchemy import Column, String
 
-import uuid  
 
-class Amenity:
+class Amenity(BaseModel, DeclarativeBase):
     """
-    Amenity class to define amenity properties and behaviors
+    A room/place amenity.
     """
 
-    def __init__(self, name, Description, Type):
-        """
-        Initialize a new Amenity instance
-        Args:
-            name (str): The name of the amenity
-            Description (str): The description of the amenity
-            Type (str): The type of the amenity
-        """
-        self.id = uuid.uuid4()  
-        self.name = name  
-        self.Description = Description  
-        self.Type = Type  
-        self.places = []  
+    if STORAGE_TYPE == 'db':
+        __tablename__ = 'amenities'
+        name = Column(String(128), nullable=False)
+    else:
+        name = ""
 
-    def add_place(self, place):
+    def __init__(self, *args, name, **kwargs):
         """
-        Add a place to the amenity's places list if it's not already present
-        Args:
-            place (str): The place to be added
+        Initializes an Amenity.
         """
-        if place not in self.places:  
-            self.places.append(place)  
+        super().__init__(*args, name=name, **kwargs)

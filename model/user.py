@@ -1,21 +1,53 @@
-import uuid
-from model import BaseModel
-from datetime import datetime
-""" This class represents the user"""
+#!/usr/bin/python3
+"""
+Defines the `User` model.
+"""
+from hashlib import md5
+from models import DeclarativeBase, STORAGE_TYPE
+from models.base_model import BaseModel
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
 
 
-class User(BaseModel):
-    """ Add a new user to the system"""
+class User(BaseModel, DeclarativeBase):
+    """
+    A user.
+    """
 
-    def __init__(self, email, first_name="", last_name="", password=""):
-        self.email = email
-        """user email string"""
-        self.first_name = first_name
-        self.last_name = last_name
-        """ user first and last name strings"""
-        self.password = password
-        """ user password string"""
-        self.id = uuid.uuid4()
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
-        """inherited from BaseModel"""
+    if STORAGE_TYPE == 'db':
+        __tablename__ = 'users'
+        email = Column(String(128), nullable=False)
+        password = Column(String(128), nullable=False)
+        first_name = Column(String(128), nullable=True)
+        last_name = Column(String(128), nullable=True)
+        places = relationship("Place", backref="user")
+        reviews = relationship("Review", backref="user")
+    else:
+        email = ""
+        password = ""
+        first_name = ""
+        last_name = ""
+
+    def __init__(
+            self, *args, email, password, first_name, last_name, **kwargs):
+        """
+        Initializes a User.
+        """
+        # This function isn't essential, but it enforces initialization with
+        # appropriate arguments.
+        super().__init__(
+            *args,
+            email=email,
+            password=password,
+            first_name=first_name,
+            last_name=last_name,
+            **kwargs
+        )
+
+    def __setattr__(self, name, value):
+        """
+        Sets the attribute "password" with MD5 encryption.
+        """
+        if name == "password":
+            value = md5(value.encode()).hexdigest()
+        super().__setattr__(name, value)
