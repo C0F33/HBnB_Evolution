@@ -1,4 +1,4 @@
-from app import app
+from app import user_blueprints
 from flask import Flask, json
 import unittest
 import sys
@@ -16,7 +16,7 @@ sys.path.append(parent_directory)
 
 class GetUsersTestCase(unittest.TestCase):
     def setUp(self):
-        self.app = app
+        self.app = user_blueprints
         self.client = self.app.test_client()
 
     def test_get_users(self):

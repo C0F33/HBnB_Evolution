@@ -1,9 +1,11 @@
-import uuid
-import datetime
+from app.model import BaseModel
 
+class Country(BaseModel):
+	def __init__(self, name, **kwargs,):
+		super().__init__(**kwargs)
+		self.name = name
+		self.country_code = country_code
 
-class Country:
-    def __init__(self, name, zip_code):
-        self.id = str(uuid.uuid4())
-        self.name = name
-        self.zip_code = zip_code
+	def __str__(self):
+		"""Returns a string representation of the country."""
+		return f"[Country] ({self.id}) {self.to_dict()}"
