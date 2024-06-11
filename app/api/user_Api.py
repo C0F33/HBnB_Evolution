@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, Blueprint
-from model import User
+from app.model import User
+from flask import jsonify
 app = Flask(__name__)
 
 

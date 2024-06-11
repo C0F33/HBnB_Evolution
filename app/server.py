@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
-from model import User
-from user_blueprints import user_blueprint
+from app.api import user_Api
 
 app = Flask(__name__)
+
+api = Api(app)
 
 app.register_blueprint(user_blueprint)
 

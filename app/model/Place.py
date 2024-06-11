@@ -1,7 +1,6 @@
-import uuid
 from app.model import BaseModel
 
-class Places(BaseModel):
+class Place(BaseModel):
 	def __init__(self, name, price, description, address, city_id, latitude, longitude, host_id, number_of_rooms, price_per_night, max_guests, amenity_ids):
 		self.name = name
 		self.description = description

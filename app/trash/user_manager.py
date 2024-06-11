@@ -1,4 +1,4 @@
-from persistence import DataManager
+from app.Data import DataManager
 from flask import Flask, request, jsonify
 from model.User import User
 import sys
