@@ -17,5 +17,5 @@ sys.path.append(parent_directory)
 ejemplo de llamado
 "from model.User import User"
 
-este pedaso de codio permite llamar modulos en el directorio padre
-es importante notar que todo llamado de estar despues de el pedaso de codigo
+este pedaso de codigo permite llamar modulos en el directorio padre,
+es importante notar que todo llamado debe estar despues de este pedaso de codigo.
