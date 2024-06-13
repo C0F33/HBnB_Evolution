@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, abort, Blueprint
 from model.Amenity import Amenity
 from Data.DataManager import DataManager
 
-amenity_blueprint = Blueprint('amenity_manager', __name__)
+amenity_Api_blueprint = Blueprint('amenity_Api', __name__)
 data_manager = DataManager()
 
 

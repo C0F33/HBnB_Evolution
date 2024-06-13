@@ -1,10 +1,15 @@
-from app.model import BaseModel
+from datetime import datetime
 
-class Country(BaseModel):
-	def __init__(self, name, **kwargs,):
-		super().__init__(**kwargs)
-		self.name = name
+class Country:
+    country_count = 0
 
-	def __str__(self):
-		"""Returns a string representation of the country."""
-		return f"[Country] ({self.id}) {self.to_dict()}"
+    def __init__(self, id, name, code):
+        self.name = name
+        self.id = id
+        self.code = code
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
+        Country.country_count += 1
+
+    def __repr__(self):
+        return f"Country({self.name}, {self.country_id})"

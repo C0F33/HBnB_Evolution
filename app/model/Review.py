@@ -1,13 +1,15 @@
 import uuid
-from app.model import BaseModel
-
+from BaseModel import BaseModel
 class Review(BaseModel):
-	def __init__(self, place_id, user_id, description, **kwargs):
-		super().__init__(**kwargs)
-		self.place_id = place_id
-		self.user_id = user_id
-		self.description = description
+    review_count = 0
 
-	def __str__(self):
-		"""Returns a string representation of the review."""
-		return f"[Review] ({self.id}) {self.to_dict()}"
+    def __init__(self, content, rating, user_id, place_id):
+        if not 1 <= rating <= 5:
+            raise ValueError("Rating must be between 1 and 5")
+
+        self.content = content
+        self.rating = rating
+        self.user_id = user_id
+        self.place_id = place_id
+
+        Review.review_count += 1

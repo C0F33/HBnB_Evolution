@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify, abort, Blueprint
-from model.review import Review
-from persistence.DataManager import DataManager
+from model.Review import Review
+from Data.DataManager import DataManager
 
-review_manager_blueprint = Blueprint('review_manager', __name__)
+review_Api_blueprint = Blueprint('review_Api', __name__)
 data_manager = DataManager()
 
 

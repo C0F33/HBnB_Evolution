@@ -2,10 +2,10 @@ from flask import Flask, request, jsonify, abort, Blueprint
 from model.Place import Place
 from Data.DataManager import DataManager
 
-place_manager_blueprint = Blueprint('place_Api', __name__)
+place_Api_blueprint = Blueprint('place_Api', __name__)
 data_manager = DataManager()
 
-@place_manager_blueprint.route('/Place', methods=['POST'])
+@place_Api_blueprint.route('/Place', methods=['POST'])
 def create_place():
 	required_fields = ['name', 'price', 'description', 'address', 'city_id', 'latitude', 'longitude', 'host_id',
 					 'number_of_rooms', 'price_per_night', 'max_guests', 'amenity_ids']
@@ -42,14 +42,14 @@ def create_place():
 	return jsonify(Place.to_dict()), 201
 
 
-@place_manager_blueprint.route('/Place', methods=['GET'])
+@place_Api_blueprint.route('/Place', methods=['GET'])
 def get_places():
 	Places = [Place.to_dict()
 			  for Place in data_manager.storage.get('Place', {}).values()]
 	return jsonify(Places), 200
 
 
-@place_manager_blueprint.route('/places/<place_id>', methods=['GET'])
+@place_Api_blueprint.route('/places/<place_id>', methods=['GET'])
 def get_place(place_id):
 	Place = data_manager.get(place_id, 'Place')
 	if not Place:
@@ -57,7 +57,7 @@ def get_place(place_id):
 	return jsonify(Place.to_dict()), 200
 
 
-@place_manager_blueprint.route('/places/<place_id>', methods=['PUT'])
+@place_Api_blueprint.route('/places/<place_id>', methods=['PUT'])
 def update_place(place_id):
 	Place = data_manager.get(place_id, 'Place')
 	if not Place:
@@ -93,7 +93,7 @@ def update_place(place_id):
 	return jsonify(Place.to_dict()), 200
 
 
-@place_manager_blueprint.route('/places/<place_id>', methods=['DELETE'])
+@place_Api_blueprint.route('/places/<place_id>', methods=['DELETE'])
 def delete_place(place_id):
 	Place = data_manager.get(place_id, 'Place')
 	if not Place:

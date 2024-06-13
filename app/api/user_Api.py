@@ -1,11 +1,11 @@
 from flask import Flask, jsonify, request, Blueprint
-from app.model import User
+from model.User import User
 from flask import jsonify
 app = Flask(__name__)
 
 
 
-user_blueprint = Blueprint('user_blueprint', __name__)
+user_blueprint = Blueprint('user_Api', __name__)
 
 @user_blueprint.route('/User', methods=['POST'])
 def create_user():

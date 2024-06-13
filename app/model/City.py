@@ -1,11 +1,16 @@
-from app.model import BaseModel
+from BaseModel import BaseModel
+
 
 class City(BaseModel):
-	def __init__(self, name, country_code, **kwargs):
-		super().__init__(**kwargs)
-		self.name = name
-		self.country_code = country_code
+    """ City class that inherits from BaseModel """
 
-	def __str__(self):
-		"""Returns a string representation of the city."""
-		return f"[City] ({self.id}) {self.to_dict()}"
+    def __init__(self, name, country, **kwargs):
+        """ Initializes the city with name, country and additional attributes """
+        super().__init__(**kwargs)
+        self.name = name
+        self.country = country
+        self.places = []
+
+    def add_place(self, place):
+        """ Adds a place to the list of places associated with the city class """
+        self.places.append(place)
