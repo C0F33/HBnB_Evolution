@@ -1,21 +1,13 @@
-Angel:
-En los files dentro de sub directorios como:
-"/model/tests/unittest_classname.py"
-se le debe add este pedaso de codigo al principio
-import sys
-import os
+This dicertory contains work on part 1 of a AirBnB clone.
+this clone will use concepts as Object Oriented Programming, Flask Wokflow and Docker Containerization.
+The app revolves around the app.py file
+This file will be executed and will call all the classes and functions we have defined
+in the app directory we have the model folder, this folder will contain modules of classes representing the data we want to manage.
+also inside of the app folder we have the persistance directory
+this contains the Ipersistence.py and the DataManager.py files.
+The IPersistence directory will contain the IPersistence abstract class that creates a blueprint of sorts for the methods to be defined by the DataManager.py
 
-# Get the directory that contains the current script.
-current_directory = os.path.dirname(os.path.abspath(__file__))
+The DataManager.py file will contain functions dedicated to managing data localy as in creating deleting saving objects etc.
 
-# Get the parent directory.
-parent_directory = os.path.dirname(current_directory)
-
-# Add the parent directory to the Python path.
-sys.path.append(parent_directory)
-
-ejemplo de llamado
-"from model.User import User"
-
-este pedaso de codio permite llamar modulos en el directorio padre
-es importante notar que todo llamado de estar despues de el pedaso de codigo
+back to the app directory the last directory to discuss is the API directory
+this directory contains  Requests and endpoints written in flask to create the logic of our application
