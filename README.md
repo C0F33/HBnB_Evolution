@@ -1,21 +1,22 @@
-Angel:
-En los files dentro de sub directorios como:
-"/model/tests/unittest_classname.py"
-se le debe add este pedaso de codigo al principio
-import sys
-import os
+# HBnB Evolution
 
-# Get the directory that contains the current script.
-current_directory = os.path.dirname(os.path.abspath(__file__))
+** Creating our first web aplication **
 
-# Get the parent directory.
-parent_directory = os.path.dirname(current_directory)
+## Description
 
-# Add the parent directory to the Python path.
-sys.path.append(parent_directory)
+**HBnB Evolution** is a web platform crafted for streamlined vacation rental management. Users can explore, reserve, and rate properties, and hosts can easily oversee their own listings. This application leverages Flask, a versatile and efficient web framework for Python, ensuring a smooth and scalable experience.
 
-ejemplo de llamado
-"from model.User import User"
+## Project Requirements
 
-este pedaso de codigo permite llamar modulos en el directorio padre,
-es importante notar que todo llamado debe estar despues de este pedaso de codigo.
+The project is structured into different aspects of development:
+
+1. **UML Design**
+2. **Classes and Business Logic Implementation**
+3. **Persistence Implementation**
+4. **User Management Endpoints**
+5. **Endpoints for all others aspects**
+6. **Containerize the Application**
+
+## UML Diagram
+
+A simple UML diagram: https://lucid.app/lucidchart/17ec454e-0df3-4e37-8821-47727eef685b/edit?invitationId=inv_c4e1435b-7abb-42e8-b43d-382edaaae5d7
