@@ -1,4 +1,16 @@
 from flask import Flask, jsonify, request, Blueprint
+import sys
+import os
+
+# Get the directory that contains the current script.
+current_directory = os.path.dirname(os.path.abspath(__file__))
+
+# Get the parent directory.
+parent_directory = os.path.dirname(current_directory)
+
+# Add the parent directory to the Python path.
+sys.path.append(parent_directory)
+
 from model.User import User
 from flask import jsonify
 app = Flask(__name__)

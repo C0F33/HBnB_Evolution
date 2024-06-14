@@ -7,7 +7,6 @@ from api.review_Api import review_Api_blueprint
 from api.amenity_Api import amenity_Api_blueprint
 app = Flask(__name__)
 
-api = Api(app)
 
 app.register_blueprint(user_blueprint)
 app.register_blueprint(country_city_Api_blueprint)
@@ -15,5 +14,15 @@ app.register_blueprint(place_Api_blueprint)
 app.register_blueprint(review_Api_blueprint)
 app.register_blueprint(amenity_Api_blueprint)
 
+@app_route('/')
+def hello_world():
+	"""
+	A simple function that returns a greeting message.
+
+	Returns:
+		str: The greeting message.
+	"""
+	return 'Hello, World!'
+
 if __name__ == "__main__":
-	app.run(host='0.0.0.0', port=8000)
+	app.run(host='0.0.0.0', port=8000,debug=True)
