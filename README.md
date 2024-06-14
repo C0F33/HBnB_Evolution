@@ -1,6 +1,6 @@
 # HBnB Evolution
 
-** Creating our first web aplication **
+**Creating our first web aplication**
 
 ## Description
 
