@@ -1,63 +1,52 @@
-import sys
-import os
-
-# Get the directory that contains the current script.
-current_directory = os.path.dirname(os.path.abspath(__file__))
-
-# Get the parent directory.
-parent_directory = os.path.dirname(current_directory)
-
-# Add the parent directory to the Python path.
-sys.path.append(parent_directory)
-
-import unittest
-from model import User
-from model import Place
-from model import Review
-from persistence import IPersistenceManager
+from persistence.IPersistenceManager import IPersistenceManager
+import json
 
 
 class DataManager(IPersistenceManager):
+    """Class for managing data persistence."""
+
     def __init__(self):
+        """Initializes the data storage."""
         self.storage = {}
 
     def save(self, entity):
-        entity_id = entity.id
+        """Saves an entity to the storage."""
         entity_type = type(entity).__name__
+        entity_id = getattr(entity, 'id', None)
+        if not entity_id:
+            raise ValueError("Entity must have an 'id' attribute.")
+
         if entity_type not in self.storage:
             self.storage[entity_type] = {}
+
         self.storage[entity_type][entity_id] = entity
+        print(f"Saved entity: {entity}")
 
     def get(self, entity_id, entity_type):
-        return self.storage.get(entity_type, {}).get(entity_id)
+        """Retrieves an entity by ID and type from the storage."""
+        if entity_type in self.storage and entity_id in self.storage[entity_type]:
+            return self.storage[entity_type][entity_id]
+        else:
+            print(f"Entity not found: {entity_type} with ID {entity_id}")
+            return None
 
     def update(self, entity):
-        entity_id = entity.id
+        """Updates an existing entity in the storage."""
         entity_type = type(entity).__name__
+        entity_id = getattr(entity, 'id', None)
+        if not entity_id:
+            raise ValueError("Entity must have an 'id' attribute.")
+
         if entity_type in self.storage and entity_id in self.storage[entity_type]:
             self.storage[entity_type][entity_id] = entity
+            print(f"Updated entity: {entity}")
+        else:
+            print(f"Entity not found: {entity_type} with ID {entity_id}")
 
     def delete(self, entity_id, entity_type):
+        """Deletes an entity by ID and type from the storage."""
         if entity_type in self.storage and entity_id in self.storage[entity_type]:
             del self.storage[entity_type][entity_id]
-
-
-class UserService(DataManager):
-    def __init__(self, data_manager):
-        self.data_manager = data_manager
-
-    def create_user(self, email, first_name, last_name, password):
-        user = User(email, first_name, last_name, password)
-        self.data_manager.save(user)
-        return user
-
-    def get_user(self, user_id):
-        return self.data_manager.get(user_id, User)
-
-    def update_user(self, user):
-        user = self.data_manager.get(user.id, User)
-        if user:
-            self.data_manager.update(user)
-
-    def delete_user(self, user_id):
-        self.data_manager.delete(user_id, User)
+            print(f"Deleted entity: {entity_type} with ID {entity_id}")
+        else:
+            print(f"Entity not found: {entity_type} with ID {entity_id}")
