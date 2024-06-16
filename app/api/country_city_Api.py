@@ -15,7 +15,7 @@ from Data.DataManager import DataManager
 from model.City import City
 
 country_city_Api_blueprint = Blueprint('country_city_Api', __name__)
-data_manager = DataManager()
+data_manager = DataManager('save', 'get', 'update', 'delete', 'file_path')
 
 @country_city_Api_blueprint.route('/countries', methods=['GET'])
 def get_countries():

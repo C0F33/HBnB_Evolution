@@ -1,5 +1,5 @@
 import uuid
-from BaseModel import BaseModel
+from model.BaseModel import BaseModel
 class Review(BaseModel):
     review_count = 0
 

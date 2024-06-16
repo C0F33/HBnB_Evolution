@@ -14,15 +14,15 @@ app.register_blueprint(place_Api_blueprint)
 app.register_blueprint(review_Api_blueprint)
 app.register_blueprint(amenity_Api_blueprint)
 
-@app_route('/')
+@app.route('/')
 def hello_world():
-	"""
-	A simple function that returns a greeting message.
+    """
+    A simple function that returns a greeting message.
 
-	Returns:
-		str: The greeting message.
-	"""
-	return 'Hello, World!'
+    Returns:
+        str: The greeting message.
+    """
+    return 'Hello, World!'
 
 if __name__ == "__main__":
-	app.run(host='0.0.0.0', port=8000,debug=True)
+    app.run(host='0.0.0.0', port=8000, debug=True)

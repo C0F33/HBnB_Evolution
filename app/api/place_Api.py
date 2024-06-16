@@ -14,7 +14,7 @@ from model.Place import Place
 from Data.DataManager import DataManager
 
 place_Api_blueprint = Blueprint('place_Api', __name__)
-data_manager = DataManager()
+data_manager = DataManager('save', 'get', 'update', 'delete', 'file_path')
 
 @place_Api_blueprint.route('/Place', methods=['POST'])
 def create_place():
