@@ -17,7 +17,7 @@ sys.path.append(parent_directory)
 
 
 
-class DataManager(IPersistenceManager.IPersistenceManager):
+class DataManager(IPersistenceManager):
 	def __init__(self, save, get, update, delete, file_path):
 		self.file_path = file_path
 		self.load_data()
@@ -68,11 +68,32 @@ class DataManager(IPersistenceManager.IPersistenceManager):
 		else:
 			raise ValueError("Entity not found in storage")
 
+
+
 	def create_entity_from_dict(self, entity_dict, entity_type):
 		# Create and return an instance of the entity using the dictionary
 		if entity_type == 'Review':
 			return Review.from_dict(entity_dict)
 		# Add other entity types as needed
+
+	def get_user_by_id(user_id):
+		return User.get_user(user_id)
+
+	# Test the method
+	user_id = 2
+	user = get_user_by_id(user_id)
+
+	if user:
+		print(f"User found: {user}")
+	else:
+		print("User not found")
+
+	def get_user_by_email(email):
+		for User in self._user_list:
+			if User.email == email:
+				return User
+		return None
+
 
 # Example usage
 file_path = 'Data.json'  # Specify the file path for data storage

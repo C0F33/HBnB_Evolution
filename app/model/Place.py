@@ -1,6 +1,10 @@
 from model.BaseModel import BaseModel
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 
 
+Base = declarative_base()
 
 class Place(BaseModel):
     """  Place class that inherits from BaseModel. Represents a rental place with various attributes. """

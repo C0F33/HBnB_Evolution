@@ -10,7 +10,7 @@ COPY . .
 
 ENV PORT 8000
 
-VOLUME /app/data
+VOLUME /app/Data
 
 EXPOSE $PORT
 

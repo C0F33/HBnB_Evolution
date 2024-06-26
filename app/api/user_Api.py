@@ -19,9 +19,9 @@ app = Flask(__name__)
 
 data = DataManager('save', 'get', 'update', 'delete', 'file_path')
 
-user_blueprint = Blueprint('user_Api', __name__)
+user_Api_blueprint = Blueprint('user_Api', __name__)
 
-@user_blueprint.route('/User', methods=['POST'])
+@user_Api_blueprint.route('/users', methods=['POST'])
 def create_user():
     """Crear un nuevo usuario."""
     if not request.json or not 'email' in request.json or not 'password' in request.json:
@@ -50,69 +50,57 @@ def create_user():
     return jsonify(new_user), 201
 
 
-@user_blueprint.route('/User/<user_id>', methods=['GET'])
+@user_Api_blueprint.route('/users', methods=['GET'])
+def get_all_users():
+	"""Obtiene una lista de todos los usuarios."""
+	return jsonify(User.get_user_list()), 200
+
+
+@user_Api_blueprint.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
-	# Retrieve the user from the database or perform any necessary operations
-
-	# Create a user instance
-	user_instance = User('test@example.com', 'First', 'Last', 'password')
-
-	# Convert the user instance to a dictionary that can be returned as a response
-	user_data = {
-		'id': str(user_instance.id),
-		'email': user_instance.email,
-		'first_name': user_instance.first_name,
-		'last_name': user_instance.last_name,
-		'created_at': user_instance.created_at.isoformat(),
-		'updated_at': user_instance.updated_at.isoformat(),
-	}
-
-	return jsonify(user_data)
+    """Obtiene detalles de un usuario específico."""
+    user = data.get_user_by_id(user_id)
+    if not user:
+        abort(404, description="User not found")
+    return jsonify(user), 200
 
 
-@user_blueprint.route('/User/<user_id>', methods=['PUT'])
+@user_Api_blueprint.route('/users/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
-	# Retrieve the user from the database or perform any necessary operations
+    """Actualiza un usuario existente."""
+    user = data.get_user_by_id(user_id)
+    if not user:
+        abort(404, description="User not found")
 
-	# Create a user instance
-	user_instance = User('test@example.com', 'First', 'Last', 'password')
+    data_json = request.get_json()
+    email = data_json.get('email', user['email'])
+    first_name = data_json.get('first_name', user['first_name'])
+    last_name = data_json.get('last_name', user['last_name'])
 
-	# Update the user instance with the new data
-	user_instance.email = 'new_email@example.com'
-	user_instance.first_name = 'New First Name'
-	user_instance.last_name = 'New Last Name'
-	user_instance.password = 'new_password'
+    if not email or not first_name or not last_name:
+        abort(400, description="Missing required fields")
 
-	# Save the updated user instance to the database or perform any necessary operations
+    if '@' not in email:  # Simple email validation
+        abort(400, description="Invalid email format")
 
-	# Convert the user instance to a dictionary that can be returned as a response
-	user_data = {
-		'id': str(user_instance.id),
-		'email': user_instance.email,
-		'first_name': user_instance.first_name,
-		'last_name': user_instance.last_name,
-		'created_at': user_instance.created_at.isoformat(),
-		'updated_at': user_instance.updated_at.isoformat(),
-	}
+    if email != user['email'] and data.get_user_by_email(email):
+        abort(409, description="Email already exists")
 
-	return jsonify(user_data)
+    updated_user = {
+        'email': email,
+        'first_name': first_name,
+        'last_name': last_name,
+        'updated_at': datetime.utcnow()
+    }
+    updated_user = data.update_user(user_id, updated_user)
+    return jsonify(updated_user), 200
 
 
-@user_blueprint.route('/User/<user_id>', methods=['DELETE'])
+@user_Api_blueprint.route('/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
-	# Retrieve the user from the database or perform any necessary operations
-
-	# Delete the user instance from the database or perform any necessary operations
-
-	return 'User deleted'
-
-
-app.register_blueprint(user_blueprint, url_prefix='/User')
-
-if __name__ == '__main__':
-	app.run(debug=True)
-	# Test the endpoints
-	test_create_user('1')
-	test_get_user('1')  # Assuming '1' is the user id returned when creating the user
-	test_update_user('1')  # Update the user with id '1' # Delete the user with id '1'
-	test_save_user('1')
+    """Elimina un usuario."""
+    user = data.get_user_by_id(user_id)
+    if not user:
+        abort(404, description="User not found")
+    data.delete_user(user_id)
+    return '', 204

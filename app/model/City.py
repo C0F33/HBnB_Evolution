@@ -1,8 +1,20 @@
-from model.BaseModel import BaseModel
+from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
+from BaseModel import BaseModel
 
 
-class City(BaseModel):
+Base = declarative_base()
+
+class City(BaseModel, Base):
     """ City class that inherits from BaseModel """
+    __tablename__ = 'city'
+    name = Column(String, nullable=False)
+    country = Column(String, ForeignKey('country.id'))
+    places = Column(String, ForeignKey('place.id'))
+
+    user = relationship("User", back_populates="city")
+    place = relationship("Place", back_populates="city")
 
     def __init__(self, name, country, **kwargs):
         """ Initializes the city with name, country and additional attributes """
