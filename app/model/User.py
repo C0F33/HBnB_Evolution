@@ -1,7 +1,6 @@
 import uuid
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine
 from sqlalchemy.orm import relationship
 from model.BaseModel import BaseModel
 from app import db
@@ -57,4 +56,3 @@ class User(BaseModel, Base):
 				return cls(**user)
 		return None
 
-Base.metadata.create_all(engine)
