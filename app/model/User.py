@@ -57,6 +57,4 @@ class User(BaseModel, Base):
 				return cls(**user)
 		return None
 
-db = "sqlite:///development/db"
-engine = create_engine(db)
 Base.metadata.create_all(engine)
