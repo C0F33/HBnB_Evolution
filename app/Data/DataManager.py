@@ -5,6 +5,7 @@ import unittest
 from model import BaseModel, User, Place, Review, Country, City, Amenity
 from Data import IPersistenceManager
 import json
+from app import db, app
 
 # Get the directory that contains the current script.
 current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -30,43 +31,61 @@ class DataManager(IPersistenceManager):
 			self.storage = {}
 
 	def save(self, entity):
-		if not isinstance(entity, BaseModel):
-			raise ValueError("Entity must be an instance of BaseModel")
+		if app.config['USE_DATABASE']:
+			db.session.add(entity)
+			db.session.commit()
+		else:
+			if not isinstance(entity, BaseModel):
+				raise ValueError("Entity must be an instance of BaseModel")
 
-		entity_id = entity.id
-		entity_type = type(entity).__name__
+			entity_id = entity.id
+			entity_type = type(entity).__name__
 
-		if entity_type not in self.storage:
-			self.storage[entity_type] = {}
+			if entity_type not in self.storage:
+				self.storage[entity_type] = {}
 
-		self.storage[entity_type][entity_id] = entity.to_dict()  # Convert object to dictionary
+			self.storage[entity_type][entity_id] = entity.to_dict()  # Convert object to dictionary
 
-		with open(self.file_path, 'w') as file:
-			json.dump(self.storage, file, indent=4)
+			with open(self.file_path, 'w') as file:
+				json.dump(self.storage, file, indent=4)
 
 	def get(self, entity_id, entity_type):
-		if entity_type in self.storage and entity_id in self.storage[entity_type]:
-			entity_dict = self.storage[entity_type][entity_id]
-			return self.create_entity_from_dict(entity_dict, entity_type)
+		if app.config['USE_DATABASE']:
+			entity = db.session.query(entity_type).get(entity_id)
+			return entity
 		else:
-			return None
+			if entity_type in self.storage and entity_id in self.storage[entity_type]:
+				entity_dict = self.storage[entity_type][entity_id]
+				return self.create_entity_from_dict(entity_dict, entity_type)
+			else:
+				return None
 
 	def update(self, entity):
-		if not isinstance(entity, BaseModel):
-			raise TypeError("entity must be an instance of BaseModel")
-		entity_type = type(entity).__name__
-		if entity_type in self.storage and entity.id in self.storage[entity_type]:
-			self.storage[entity_type][entity.id] = entity.to_dict()  # Convert object to dictionary
-			self.save_data()
+		if app.config['USE_DATABASE']:
+			db.session.merge(entity)
+			db.session.commit()
 		else:
-			raise ValueError("Entity not found in storage")
+			if not isinstance(entity, BaseModel):
+				raise TypeError("entity must be an instance of BaseModel")
+			entity_type = type(entity).__name__
+			if entity_type in self.storage and entity.id in self.storage[entity_type]:
+				self.storage[entity_type][entity.id] = entity.to_dict()  # Convert object to dictionary
+				self.save_data()
+			else:
+				raise ValueError("Entity not found in storage")
 
 	def delete(self, entity_id, entity_type):
-		if entity_type in self.storage and entity_id in self.storage[entity_type]:
-			del self.storage[entity_type][entity_id]
-			self.save_data()
+		if app.config['USE_DATABASE']:
+			entity = db.session.query(entity_type).get(entity_id)
+			if entity:
+				db.session.delete(entity)
+				db.session.commit()
 		else:
-			raise ValueError("Entity not found in storage")
+			if entity_type in self.storage and entity_id in self.storage[entity_type]:
+				del self.storage[entity_type][entity_id]
+				self.save_data()
+			else:
+				raise ValueError("Entity not found in storage")
 
 
 
@@ -80,19 +99,22 @@ class DataManager(IPersistenceManager):
 		return User.get_user(user_id)
 
 	# Test the method
-	user_id = 2
-	user = get_user_by_id(user_id)
+	#user_id = 2
+	#user = get_user_by_id(user_id)
 
-	if user:
-		print(f"User found: {user}")
-	else:
-		print("User not found")
+	#if user:
+	#	print(f"User found: {user}")
+	#else:
+	#	print("User not found")
 
-	def get_user_by_email(email):
-		for User in self._user_list:
-			if User.email == email:
-				return User
-		return None
+	def get_user_by_email(self, email):
+		if app.config['USE_DATABASE']:
+			return db.sessionquery(User).filter_by(email=email).first()
+		else:
+			for User in self.storage.get('User', {}).Values():
+				if User.email == email:
+					return User
+			return None
 
 
 # Example usage
